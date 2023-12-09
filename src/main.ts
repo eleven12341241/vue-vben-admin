@@ -6,7 +6,7 @@ import 'ant-design-vue/dist/reset.css';
 import 'virtual:svg-icons-register';
 
 import { createApp } from 'vue';
-
+import Antd from 'ant-design-vue';
 import { registerGlobComp } from '@/components/registerGlobComp';
 import { setupGlobDirectives } from '@/directives';
 import { setupI18n } from '@/locales/setupI18n';
@@ -20,7 +20,7 @@ import App from './App.vue';
 
 async function bootstrap() {
   const app = createApp(App);
-
+  app.use(Antd);
   // Configure store
   // 配置 store
   setupStore(app);
