@@ -15,12 +15,12 @@
       <a-card
         v-for="item in GoodsTypes"
         :key="item.title"
-        title="da"
+        :title="item.title"
         style="width: 300px"
         :class="{ 'selected-card': selectedCard === item.title }"
         @click="selectCard(item)"
       >
-        <p>{{ item.title }}</p>
+        <p>{{ item.description }}</p>
       </a-card>
     </div>
   </Card>
@@ -29,12 +29,11 @@
       <a-card
         v-for="item in selectedGoods"
         :key="item.title"
-        title="da"
+        :title="item.title"
         style="width: 300px"
         :class="{ 'selected-card': selectedGoodsCard === item.title }"
         @click="selectGoods(item)"
       >
-        <p>{{ item.title }}</p>
         <p>价格：{{ item.price }} $</p>
         <p>余量：{{ item.remain }}</p>
       </a-card>
@@ -71,12 +70,16 @@
   const selectGoods = (item: Goods) => {
     selectedGoodsCard.value = item.title;
   };
+  const { getGoods, addGoods } = useGoods();
 
   const onSearch = async (searchValue: string) => {
     console.log(searchValue);
+    addGoods({
+      title: searchValue,
+      description: '商品描述',
+    });
   };
 
-  const { getGoods } = useGoods();
   const GoodsTypes = ref<GoodsType[]>([]);
   const selectedGoods = ref<Goods[]>([]);
   getGoods().then((res) => {
