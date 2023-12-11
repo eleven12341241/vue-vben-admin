@@ -3,21 +3,21 @@ import { LAYOUT } from '@/router/constant';
 import { t } from '@/hooks/web/useI18n';
 
 const dashboard: AppRouteModule = {
-  path: '/goods',
-  name: 'Goods',
+  path: '/pay',
+  name: 'Pay',
   component: LAYOUT,
-  redirect: '/goods/index',
+  redirect: '/pay/index',
   meta: {
     icon: 'simple-icons:about-dot-me',
-    title: t('商品'),
+    title: t('支付'),
   },
   children: [
     {
       path: 'index',
-      name: 'GoodsPage',
-      component: () => import('@/views/goods/goodsModal/index.vue'),
+      name: 'pay',
+      components: () => import('@/views/pay/index.vue'),
       meta: {
-        title: t('商品购买'),
+        title: t('支付'),
         icon: 'simple-icons:about-dot-me',
       },
     },
