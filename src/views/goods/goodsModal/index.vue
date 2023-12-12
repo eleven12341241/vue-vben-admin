@@ -1,66 +1,68 @@
 <template>
-  <Card title="商品搜索" v-bind="$attrs">
-    <a-space direction="vertical">
-      <a-input-search
-        style="width: 200px"
-        v-model:value="value"
-        placeholder="输入商品名称搜索"
-        enter-button
-        @search="onSearch"
-      />
-    </a-space>
-  </Card>
-  <Card title="商品分类" v-bind="$attrs">
-    <div class="goods-list">
-      <a-card
-        v-for="item in GoodsTypes"
-        :key="item.title"
-        :title="item.title"
-        style="width: 300px"
-        :class="{ 'selected-card': selectedCard === item.title }"
-        @click="selectCard(item)"
-      >
-        <p>{{ item.description }}</p>
-      </a-card>
-    </div>
-  </Card>
-  <Card title="选择商品">
-    <div class="goods-list">
-      <a-card
-        v-for="item in selectedGoods"
-        :key="item.title"
-        :title="item.title"
-        style="width: 300px"
-        :class="{ 'selected-card': selectedGoodsCard === item }"
-        @click="selectGoods(item)"
-      >
-        <p>价格：{{ item.price }} $</p>
-        <p>余量：{{ item.remain }}</p>
-      </a-card>
-    </div>
-  </Card>
-  <Card title="已选商品：">
-    <p>已选商品：</p>
-    {{ selectedGoodsCard?.title }}
-    {{ selectedGoodsCard?.price }} 元
-  </Card>
-  <Card title="联系方式">
-    <a-form style="width: 300px" :model="formState" name="basic" autocomplete="off">
-      <a-form-item label="联系方式" :rules="[{ required: true, message: '请输入联系方式' }]">
-        <a-input v-model:value="formState.phone" />
-      </a-form-item>
+  <div>
+    <Card title="商品搜索" v-bind="$attrs">
+      <a-space direction="vertical">
+        <a-input-search
+          style="width: 200px"
+          v-model:value="value"
+          placeholder="输入商品名称搜索"
+          enter-button
+          @search="onSearch"
+        />
+      </a-space>
+    </Card>
+    <Card title="商品分类" v-bind="$attrs">
+      <div class="goods-list">
+        <a-card
+          v-for="item in GoodsTypes"
+          :key="item.title"
+          :title="item.title"
+          style="width: 300px"
+          :class="{ 'selected-card': selectedCard === item.title }"
+          @click="selectCard(item)"
+        >
+          <p>{{ item.description }}</p>
+        </a-card>
+      </div>
+    </Card>
+    <Card title="选择商品">
+      <div class="goods-list">
+        <a-card
+          v-for="item in selectedGoods"
+          :key="item.title"
+          :title="item.title"
+          style="width: 300px"
+          :class="{ 'selected-card': selectedGoodsCard === item }"
+          @click="selectGoods(item)"
+        >
+          <p>价格：{{ item.price }} $</p>
+          <p>余量：{{ item.remain }}</p>
+        </a-card>
+      </div>
+    </Card>
+    <Card title="已选商品：">
+      <p>已选商品：</p>
+      {{ selectedGoodsCard?.title }}
+      {{ selectedGoodsCard?.price }} 元
+    </Card>
+    <Card title="联系方式">
+      <a-form style="width: 300px" :model="formState" name="basic" autocomplete="off">
+        <a-form-item label="联系方式" :rules="[{ required: true, message: '请输入联系方式' }]">
+          <a-input v-model:value="formState.phone" />
+        </a-form-item>
 
-      <a-form-item>
-        <a-button type="primary" @click="createOrder">提交订单</a-button>
-      </a-form-item>
-    </a-form>
-  </Card>
-  <createOrderModal
-    :visible="orderModalVisible"
-    :orderData="orderData"
-    @ok="handleModalOk"
-    @cancel="handleModalCancel"
-  />
+        <a-form-item>
+          <a-button type="primary" @click="createOrder">提交订单</a-button>
+        </a-form-item>
+      </a-form>
+    </Card>
+    <createOrderModal
+      :visible="orderModalVisible"
+      :orderData="orderData"
+      @ok="handleModalOk"
+      @cancel="handleModalCancel"
+    />
+  </div>
 </template>
 <script lang="ts" setup>
   import { Card } from 'ant-design-vue';
@@ -139,6 +141,8 @@
 
     addOrder(orderForm).then((res: any) => {
       if (res.success) {
+        console.log('res.data');
+        console.log(res.data);
         orderData.value = res.data;
         orderModalVisible.value = true;
       }

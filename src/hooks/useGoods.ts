@@ -19,6 +19,12 @@ interface Order {
   create_by: string;
 }
 
+interface PayOrder {
+  id: number;
+  order_state_id: number;
+  user_id: number;
+}
+
 export default function useGoods() {
   const getGoods = async () => {
     const response: AxiosResponse<GoodsType[]> = await axios.get('/api/get_goods');
@@ -38,9 +44,16 @@ export default function useGoods() {
     return orderData;
   };
 
+  const payOrder = async (order: PayOrder) => {
+    const response: AxiosResponse<PayOrder> = await axios.post('/api/pay_order', order);
+    const payData: PayOrder = response.data;
+    return payData;
+  };
+
   return {
     getGoods,
     addGoods,
     addOrder,
+    payOrder,
   };
 }

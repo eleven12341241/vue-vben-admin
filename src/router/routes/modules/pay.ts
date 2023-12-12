@@ -14,8 +14,8 @@ const dashboard: AppRouteModule = {
   children: [
     {
       path: 'index',
-      name: 'pay',
-      components: () => import('@/views/pay/index.vue'),
+      name: 'PayPage',
+      component: () => import('@/views/pay/index.vue'),
       meta: {
         title: t('支付'),
         icon: 'simple-icons:about-dot-me',
