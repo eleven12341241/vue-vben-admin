@@ -16,6 +16,7 @@
           v-model:value="formData.mobile"
           :placeholder="t('sys.login.mobile')"
           class="fix-auto-fill"
+          @input="validatePhone($event, $event.target.value)"
         />
       </FormItem>
       <FormItem name="sms" class="enter-x">
@@ -23,6 +24,7 @@
           size="large"
           class="fix-auto-fill"
           v-model:value="formData.sms"
+          :sendCodeApi="sendCodeApi"
           :placeholder="t('sys.login.smsCode')"
         />
       </FormItem>
@@ -73,6 +75,8 @@
   import { CountdownInput } from '@/components/CountDown';
   import { useI18n } from '@/hooks/web/useI18n';
   import { useLoginState, useFormRules, useFormValid, LoginStateEnum } from './useLogin';
+  import useUser from '@/hooks/usrUser';
+  import message from '@/views/form-design/utils/message';
 
   const FormItem = Form.Item;
   const InputPassword = Input.Password;
@@ -96,9 +100,33 @@
 
   const getShow = computed(() => unref(getLoginState) === LoginStateEnum.REGISTER);
 
+  const { register, getCode } = useUser();
+  const sendCodeApi = async () => {
+    // 应该只检查手机号是否正确
+    // const data = await validForm();
+    // if (!data) return;
+    const code = await getCode(formData.mobile);
+    if (code === formData.mobile) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   async function handleRegister() {
     const data = await validForm();
     if (!data) return;
     console.log(data);
+    // 将数据提交到后台
+    register(data).then((res: any) => {
+      console.log(res, '111');
+      if (res.data.code === 400) {
+        message.error(res.data.message);
+      } else {
+        // alert(res.data.message);
+        message.success('注册成功');
+        handleBackLogin();
+      }
+    });
   }
 </script>
