@@ -56,8 +56,10 @@ export function useFormRules(formData?: Recordable) {
   const getAccountFormRule = computed(() => createRule(t('sys.login.accountPlaceholder')));
   const getPasswordFormRule = computed(() => createRule(t('sys.login.passwordPlaceholder')));
   const getSmsFormRule = computed(() => createRule(t('sys.login.smsPlaceholder')));
-  const getMobileFormRule = computed(() => createRule(t('sys.login.mobilePlaceholder')));
-
+  const getMobileFormRule = computed((): RuleObject[] => [
+    // ...createRule(t('sys.login.mobilePlaceholder')),
+    { validator: validateMobile(), trigger: 'change' },
+  ]);
   const validatePolicy = async (_: RuleObject, value: boolean) => {
     return !value ? Promise.reject(t('sys.login.policyPlaceholder')) : Promise.resolve();
   };
@@ -69,6 +71,23 @@ export function useFormRules(formData?: Recordable) {
       }
       if (value !== password) {
         return Promise.reject(t('sys.login.diffPwd'));
+      }
+      return Promise.resolve();
+    };
+  };
+  const validatePhone = (value: string): boolean => {
+    // You can customize this validation logic based on your requirements
+    const phoneRegex = /^1[0-9]{10}$/; // Assuming a simple format of 11-digit phone numbers starting with '1'
+    return phoneRegex.test(value);
+  };
+
+  const validateMobile = () => {
+    return async (_: RuleObject, value: string) => {
+      if (!value) {
+        return Promise.reject(t('sys.login.mobilePlaceholder'));
+      }
+      if (!validatePhone(value)) {
+        return Promise.reject(t('手机号输入不正确'));
       }
       return Promise.resolve();
     };
