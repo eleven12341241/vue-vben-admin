@@ -75,7 +75,7 @@
   import { CountdownInput } from '@/components/CountDown';
   import { useI18n } from '@/hooks/web/useI18n';
   import { useLoginState, useFormRules, useFormValid, LoginStateEnum } from './useLogin';
-  import useUser from '@/hooks/usrUser';
+  import useUser from '@/hooks/useUser';
   import message from '@/views/form-design/utils/message';
 
   const FormItem = Form.Item;
@@ -130,3 +130,4 @@
     });
   }
 </script>
+@/hooks/useUser
