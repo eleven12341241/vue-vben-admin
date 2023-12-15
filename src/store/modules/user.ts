@@ -7,7 +7,8 @@ import { PageEnum } from '@/enums/pageEnum';
 import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '@/enums/cacheEnum';
 import { getAuthCache, setAuthCache } from '@/utils/auth';
 import { GetUserInfoModel, LoginParams } from '@/api/sys/model/userModel';
-import { doLogout, getUserInfo, loginApi } from '@/api/sys/user';
+// import { doLogout, getUserInfo, loginApi } from '@/api/sys/user';
+import { doLogout, getUserInfo } from '@/api/sys/user';
 import { useI18n } from '@/hooks/web/useI18n';
 import { useMessage } from '@/hooks/web/useMessage';
 import { router } from '@/router';
@@ -16,6 +17,9 @@ import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic';
 import { isArray } from '@/utils/is';
 import { h } from 'vue';
+import useUser from '@/hooks/useUser';
+
+const { login } = useUser();
 
 interface UserState {
   userInfo: Nullable<UserInfo>;
@@ -89,21 +93,28 @@ export const useUserStore = defineStore({
       },
     ): Promise<GetUserInfoModel | null> {
       try {
-        const { goHome = true, mode, ...loginParams } = params;
-        const data = await loginApi(loginParams, mode);
+        const { goHome = true, ...loginParams } = params;
+        let data = await login(loginParams);
+        if (data.code !== 200) {
+          return Promise.reject(data);
+        }
+        data = data.data;
+        console.log(data, 'data');
         const { token } = data;
 
         // save token
         this.setToken(token);
-        return this.afterLoginAction(goHome);
+        return this.afterLoginAction(goHome, data);
       } catch (error) {
         return Promise.reject(error);
       }
     },
-    async afterLoginAction(goHome?: boolean): Promise<GetUserInfoModel | null> {
+    async afterLoginAction(goHome?: boolean, data?: any): Promise<GetUserInfoModel | null> {
       if (!this.getToken) return null;
       // get user info
-      const userInfo = await this.getUserInfoAction();
+      // 原来是这样写的，他需要根据getUserInfo，根据token去匹配用户
+      // const userInfo = await this.getUserInfoAction();
+      const userInfo = data;
 
       const sessionTimeout = this.sessionTimeout;
       if (sessionTimeout) {
