@@ -105,8 +105,8 @@
     // 应该只检查手机号是否正确
     // const data = await validForm();
     // if (!data) return;
-    const code = await getCode(formData.mobile);
-    if (code === formData.mobile) {
+    const code: any = await getCode(formData.mobile);
+    if (code.success) {
       return true;
     } else {
       return false;
@@ -114,6 +114,7 @@
   };
 
   async function handleRegister() {
+    loading.value = true;
     const data = await validForm();
     if (!data) return;
     console.log(data);
@@ -127,6 +128,7 @@
         message.success('注册成功');
         handleBackLogin();
       }
+      loading.value = false;
     });
   }
 </script>
