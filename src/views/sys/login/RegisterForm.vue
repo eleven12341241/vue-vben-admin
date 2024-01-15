@@ -113,19 +113,27 @@
     }
   };
 
+  const resetFormData = () => {
+    formData.account = '';
+    formData.password = '';
+    formData.confirmPassword = '';
+    formData.mobile = '';
+    formData.sms = '';
+    formData.policy = false;
+  };
+
   async function handleRegister() {
     loading.value = true;
     const data = await validForm();
     if (!data) return;
-    console.log(data);
     // 将数据提交到后台
     register(data).then((res: any) => {
-      console.log(res, '111');
       if (res.data.code === 400) {
         message.error(res.data.message);
       } else {
         // alert(res.data.message);
         message.success('注册成功');
+        resetFormData();
         handleBackLogin();
       }
       loading.value = false;
