@@ -16,7 +16,6 @@
           v-model:value="formData.mobile"
           :placeholder="t('sys.login.mobile')"
           class="fix-auto-fill"
-          @input="validatePhone($event, $event.target.value)"
         />
       </FormItem>
       <FormItem name="sms" class="enter-x">
@@ -100,11 +99,19 @@
 
   const getShow = computed(() => unref(getLoginState) === LoginStateEnum.REGISTER);
 
+  const validatePhone = (value: string): boolean => {
+    // You can customize this validation logic based on your requirements
+    const phoneRegex = /^1[0-9]{10}$/; // Assuming a simple format of 11-digit phone numbers starting with '1'
+    return phoneRegex.test(value);
+  };
+
   const { register, getCode } = useUser();
   const sendCodeApi = async () => {
     // 应该只检查手机号是否正确
-    // const data = await validForm();
-    // if (!data) return;
+    if (!validatePhone(formData.mobile)) {
+      message.error('手机号格式不正确');
+      return false;
+    }
     const code: any = await getCode(formData.mobile);
     if (code.success) {
       return true;
@@ -113,19 +120,27 @@
     }
   };
 
+  const resetFormData = () => {
+    formData.account = '';
+    formData.password = '';
+    formData.confirmPassword = '';
+    formData.mobile = '';
+    formData.sms = '';
+    formData.policy = false;
+  };
+
   async function handleRegister() {
     loading.value = true;
     const data = await validForm();
     if (!data) return;
-    console.log(data);
     // 将数据提交到后台
     register(data).then((res: any) => {
-      console.log(res, '111');
       if (res.data.code === 400) {
         message.error(res.data.message);
       } else {
         // alert(res.data.message);
         message.success('注册成功');
+        resetFormData();
         handleBackLogin();
       }
       loading.value = false;
