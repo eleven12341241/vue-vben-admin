@@ -3,8 +3,9 @@ import axios, { AxiosResponse } from 'axios';
 interface User {
   id?: number;
   username: string;
-  pnone?: string;
-  password: string;
+  phone?: string;
+  password?: string;
+  sms?: string;
   create_by?: Date;
 }
 
@@ -38,9 +39,16 @@ export default function useUser() {
     return userData;
   };
 
+  const resetPassword = async (user: User) => {
+    const response: AxiosResponse<User> = await axios.post('/api/reset_password', user);
+    const userData: User = response.data;
+    return userData;
+  };
+
   return {
     register,
     getCode,
     login,
+    resetPassword,
   };
 }

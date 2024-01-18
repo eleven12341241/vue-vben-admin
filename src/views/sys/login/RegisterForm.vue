@@ -132,6 +132,7 @@
   async function handleRegister() {
     loading.value = true;
     const data = await validForm();
+    console.log(data);
     if (!data) return;
     // 将数据提交到后台
     register(data).then((res: any) => {
