@@ -63,10 +63,21 @@
       @cancel="handleModalCancel"
     />
   </div>
+  <div>
+    <video
+      ref="myVideo"
+      src="http://vjs.zencdn.net/v/oceans.mp4"
+      @timeupdate="handleTimeUpdate"
+      controls
+    >
+      <!-- 视频源等其他属性 -->
+    </video>
+    <p> 当前时间 {{ currentTime }}</p>
+  </div>
 </template>
 <script lang="ts" setup>
   import { Card } from 'ant-design-vue';
-  import { ref, reactive } from 'vue';
+  import { ref, reactive, onMounted } from 'vue';
   import useGoods from '@/hooks/useGoods';
   import message from '../..//form-design/utils/message';
   import createOrderModal from '../createOrderModal/index.vue';
@@ -161,6 +172,19 @@
     orderModalVisible.value = false;
     orderData.value = {};
   };
+
+  const currentTime = ref(0);
+  const myVideo = ref(null);
+
+  const handleTimeUpdate = () => {
+    if (myVideo.value) {
+      currentTime.value = myVideo.value.currentTime;
+    }
+  };
+
+  onMounted(() => {
+    myVideo.value.addEventListener('timeupdate', handleTimeUpdate);
+  });
 </script>
 <style scoped>
   .goods-list {
